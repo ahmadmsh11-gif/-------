@@ -1,1 +1,218 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تحدي الأبطال - العينة التجريبية</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 20px; background: linear-gradient(135deg, #74ebd5, #9face6); min-height: 100vh; color: #333; margin: 0; }
+        
+        #intro-screen { background: rgba(255, 255, 255, 0.95); padding: 40px 30px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); margin: 50px auto; max-width: 650px; line-height: 1.8; }
+        #intro-screen h1 { color: #2980b9; font-size: 2.8em; margin-bottom: 10px; }
+        .intro-dedication { color: #e67e22; font-weight: bold; font-size: 1.4em; margin-bottom: 20px; }
+        
+        .player-registration { background: #fff3e0; border: 2px dashed #e67e22; padding: 20px; border-radius: 15px; margin: 20px 0; }
+        #player-name { font-size: 1.2em; padding: 10px; width: 80%; border-radius: 10px; border: 2px solid #bdc3c7; text-align: center; font-weight: bold; margin-bottom: 10px; outline: none; }
+        
+        #start-btn { background: #e74c3c; color: white; padding: 15px 40px; font-size: 1.5em; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; margin-top: 20px; transition: 0.3s; }
+        #start-btn:hover { transform: scale(1.05); background: #c0392b; }
+
+        #quiz-screen { display: none; }
+        .score-board { font-size: 1.8em; font-weight: bold; color: #fff; background: rgba(0,0,0,0.3); padding: 15px 30px; border-radius: 50px; display: inline-block; margin-bottom: 20px; }
+        .question-box { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin: 0 auto; max-width: 650px; }
+        
+        button.option-btn { display: block; margin: 12px auto; padding: 15px; width: 90%; border-radius: 15px; border: 2px solid #ecf0f1; background: #fdfdfd; color: #2c3e50; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button.option-btn:hover:not(:disabled) { background: #e0f7fa; border-color: #00bcd4; transform: scale(1.02); }
+        button.option-btn:disabled { cursor: not-allowed; opacity: 0.8; }
+        
+        #feedback { font-size: 1.1em; line-height: 1.8; padding: 20px; margin-top: 20px; border-radius: 15px; display: none; text-align: right; }
+        .exp-details { background: rgba(255,255,255,0.6); padding: 10px 15px; border-radius: 10px; margin-top: 10px; border-right: 4px solid; }
+
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 25px; gap: 10px; }
+        .nav-btn { font-size: 1.1em; font-weight: bold; padding: 15px; border-radius: 15px; border: none; cursor: pointer; flex: 1; color: white; }
+        #prev-btn { background-color: #7f8c8d; }
+        #next-btn { background-color: #2980b9; }
+
+        #leaderboard-screen { display: none; }
+        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 1.1em; }
+        .leaderboard-table th, .leaderboard-table td { padding: 12px; border-bottom: 2px solid #eee; text-align: center; }
+        .leaderboard-table th { background-color: #2980b9; color: white; }
+        .current-player { border: 3px solid #27ae60 !important; background-color: #e9f7ef !important; }
+        
+        .visitor-counter-box { margin-top: 25px; border-top: 1px solid #ddd; padding-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; font-weight: bold; color: #7f8c8d; }
+        .frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 4px; font-size: 0.9em; line-height: 1.2; font-weight: bold; }
+        .frac span { padding: 0 5px; }
+        .frac .bottom { border-top: 2px solid currentColor; }
+    </style>
+</head>
+<body>
+
+    <div id="intro-screen">
+        <h1>تحدي الأبطال 🏆 (نسخة تجريبية)</h1>
+        <p class="intro-dedication">✨ عينة مصغرة من المراجعة الشاملة ✨</p>
+        
+        <div class="player-registration" id="reg-box">
+            <h3 style="color: #d35400; margin-top: 0;">أدخل اسمك يا بطل لتسجيل دخولك:</h3>
+            <input type="text" id="player-name" placeholder="اكتب اسمك هنا..." required>
+        </div>
+
+        <button id="start-btn" onclick="startQuiz()">ابدأ التجربة 🚀</button>
+
+        <div class="visitor-counter-box">
+            <span>📊 إجمالي الزيارات المسجلة:</span>
+            <img src="https://api.visitorbadge.io/api/visitors?path=ahmadmsh11-math-demo&label=VISITORS&countColor=%2327ae60" alt="عداد الزوار"/>
+        </div>
+    </div>
+
+    <div id="quiz-screen">
+        <div class="score-board">النقاط: <span id="points" style="color: #f1c40f;">0</span></div>
+
+        <div class="question-box">
+            <h2 id="question-text" style="color: #2c3e50; line-height: 1.6;">السؤال</h2>
+            <div id="options-container"></div>
+            <div id="feedback"></div>
+            
+            <div class="nav-buttons">
+                <button id="prev-btn" class="nav-btn" onclick="prevQuestion()">⬅ السابق</button>
+                <button id="next-btn" class="nav-btn" onclick="nextQuestion()">التالي ➡</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="leaderboard-screen">
+        <div class="question-box" style="margin-top:20px; max-width:700px;">
+            <h1 style="color:#2c3e50;">🎉 انتهت التجربة! 🎉</h1>
+            <h2 style="color:#27ae60;">نتيجتك: <span id="final-score-display"></span></h2>
+            
+            <h2 style="margin-top: 30px; color: #2980b9;">👑 لوحة الأبطال 👑</h2>
+            <div style="overflow-x:auto;">
+                <table class="leaderboard-table" id="leaderboard-table">
+                    <thead><tr><th>المركز</th><th>البطل</th><th>النقاط</th></tr></thead>
+                    <tbody id="leaderboard-body"></tbody>
+                </table>
+            </div>
+            <button onclick="location.reload()" style="background:#3498db; color:white; padding:15px; border-radius:15px; border:none; font-size:1.2em; font-weight:bold; cursor:pointer; width:80%; margin-top:30px;">إعادة التجربة 🔄</button>
+        </div>
+    </div>
+
+<script>
+// عينة الأسئلة من الـ PDF
+const questions = [
+    { "q_num": 1, "type": "خيارات", "question": "الوسيط لدرجات الحرارة التالية: ٣٨ ، ٤٠ ، ٣٧ ، ٣٨ ، ٤١ ، ٤٠ ، ٣٩ ، ٤٠ ، ٣٩ هو:", "options": ["٣٨", "٣٩", "٤٠", "٤١"], "answer": "٣٩", "exp": "لإيجاد الوسيط، يجب أولاً ترتيب الأرقام من الأصغر للأكبر:<br>٣٧، ٣٨، ٣٨، ٣٩، <b>٣٩</b>، ٤٠، ٤٠، ٤٠، ٤١.<br>الرقم الذي يقع في المنتصف تماماً هو ٣٩." },
+    { "q_num": 2, "type": "صح وخطأ", "question": "صح أم خطأ: المنوال هو العدد أو الأعداد الأكثر تكراراً في مجموعة البيانات.", "options": ["صح", "خطأ"], "answer": "صح", "exp": "تعريف (المنوال) في الرياضيات هو القيمة أو القيم الأكثر تكراراً أو شيوعاً بين البيانات المذكورة." },
+    { "q_num": 3, "type": "فراغات", "question": "اختر العدد المناسب لملء الفراغ ليصبح الكسران متكافئين: 4/5 = .../20", "options": ["١٢", "١٤", "١٥", "١٦"], "answer": "١٦", "exp": "لإيجاد الكسر المكافئ، نلاحظ أن المقام (5) انضرب في (4) ليصبح (20).<br>لذلك، يجب أن نضرب البسط (4) في (4) أيضاً.<br>4 × 4 = 16. إذن العدد المفقود هو 16." },
+    { "q_num": 4, "type": "مقال/خيارات", "question": "أوجد القاسم المشترك الأكبر (ق.م.أ) للعددين 8 و 12:", "options": ["٢", "٤", "٦", "٨"], "answer": "٤", "exp": "نوجد قواسم كل عدد أولاً:<br>قواسم العدد 8 هي: 1، 2، <b>4</b>، 8.<br>قواسم العدد 12 هي: 1، 2، 3، <b>4</b>، 6، 12.<br>القواسم المشتركة هي (1، 2، 4)، وأكبرها هو 4." }
+];
+
+let currentIdx = 0;
+let userAnswers = {}; 
+let currentPlayer = "";
+let defaultLeaderboard = [{ name: "تميم (أبو سعد)", score: 40 }];
+
+function formatFractions(text) {
+    if (!text) return "";
+    return text.replace(/(\d+)\/(\d+)/g, '<span class="frac"><span>$1</span><span class="bottom">$2</span></span>');
+}
+
+function startQuiz() {
+    let inputName = document.getElementById('player-name').value.trim();
+    if(inputName === "") { alert("لا تنسى كتابة اسمك!"); return; }
+    currentPlayer = inputName;
+    document.getElementById('intro-screen').style.display = 'none';
+    document.getElementById('quiz-screen').style.display = 'block';
+    loadQ();
+}
+
+function updateScore() {
+    let score = Object.values(userAnswers).filter(a => a.isCorrect).length * 10;
+    document.getElementById('points').innerText = score;
+    return score;
+}
+
+function showFeedbackUI(o, q, isCorrect) {
+    let f = document.getElementById('feedback'); 
+    f.style.display = "block";
+    let formattedAnswer = formatFractions(q.answer);
+    let formattedExp = formatFractions(q.exp);
+    f.style.borderLeft = isCorrect ? "8px solid #27ae60" : "8px solid #c0392b";
+    if(isCorrect) { 
+        f.style.backgroundColor = "#e8f8f5"; f.style.color = "#155724"; 
+        f.innerHTML = "✅ <b>إجابة صحيحة.</b><div class='exp-details' style='border-color:#27ae60;'>💡 <b>الشرح:</b><br>" + formattedExp + "</div>"; 
+    } else { 
+        f.style.backgroundColor = "#fdedec"; f.style.color = "#721c24"; 
+        f.innerHTML = "❌ <b>إجابة خاطئة.</b><br>🎯 <b>الصحيح:</b> (" + formattedAnswer + ")<div class='exp-details' style='border-color:#c0392b;'>💡 <b>الشرح:</b><br>" + formattedExp + "</div>"; 
+    }
+}
+
+function loadQ() {
+    let q = questions[currentIdx];
+    let qText = `<span style="color:#7f8c8d; font-size:0.7em;">[سؤال ${q.type}]</span><br>` + (currentIdx + 1) + ". " + formatFractions(q.question);
+    
+    document.getElementById('question-text').innerHTML = qText;
+    let cont = document.getElementById('options-container'); 
+    cont.innerHTML = '';
+    document.getElementById('feedback').style.display = "none";
+    
+    document.getElementById('prev-btn').disabled = (currentIdx === 0);
+    let nextBtn = document.getElementById('next-btn');
+    if (currentIdx === questions.length - 1) {
+        nextBtn.innerHTML = "إنهاء التجربة 🏁"; nextBtn.style.backgroundColor = "#e74c3c";
+    } else {
+        nextBtn.innerHTML = "التالي ➡"; nextBtn.style.backgroundColor = "#2980b9";
+    }
+
+    q.options.forEach(o => {
+        let btn = document.createElement('button'); 
+        btn.className = "option-btn";
+        btn.innerHTML = formatFractions(o);
+        
+        if (userAnswers[currentIdx]) {
+            btn.disabled = true;
+            if (o === userAnswers[currentIdx].selected) {
+                btn.style.border = userAnswers[currentIdx].isCorrect ? "3px solid #27ae60" : "3px solid #e74c3c";
+                btn.style.backgroundColor = userAnswers[currentIdx].isCorrect ? "#e9f7ef" : "#fdedec";
+            }
+        }
+
+        btn.onclick = () => {
+            let allBtns = cont.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+            let isCorrect = (o === q.answer);
+            userAnswers[currentIdx] = { selected: o, isCorrect: isCorrect };
+            updateScore();
+            showFeedbackUI(o, q, isCorrect);
+        };
+        cont.appendChild(btn);
+    });
+
+    if (userAnswers[currentIdx]) { showFeedbackUI(userAnswers[currentIdx].selected, q, userAnswers[currentIdx].isCorrect); }
+}
+
+function prevQuestion() { if (currentIdx > 0) { currentIdx--; loadQ(); } }
+
+function nextQuestion() {
+    if(currentIdx < questions.length - 1) { currentIdx++; loadQ(); } 
+    else { finishQuiz(); }
+}
+
+function finishQuiz() {
+    document.getElementById('quiz-screen').style.display = 'none';
+    document.getElementById('leaderboard-screen').style.display = 'block';
+    let finalScore = updateScore();
+    document.getElementById('final-score-display').innerText = finalScore + " / " + (questions.length * 10);
+    
+    defaultLeaderboard.push({ name: currentPlayer, score: finalScore });
+    defaultLeaderboard.sort((a, b) => b.score - a.score);
+    
+    let tbody = document.getElementById('leaderboard-body');
+    tbody.innerHTML = '';
+    defaultLeaderboard.forEach((player, index) => {
+        let tr = document.createElement('tr');
+        if (player.name === currentPlayer) tr.className = "current-player";
+        tr.innerHTML = `<td>${index + 1}</td><td>${player.name}</td><td>${player.score}</td>`;
+        tbody.appendChild(tr);
+    });
+}
+</script>
+</body>
+</html>
