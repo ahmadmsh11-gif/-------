@@ -66,6 +66,17 @@
             font-weight: bold;
             text-align: right;
         }
+        .visual-box {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100px;
+            border: 1px solid #e0e0e0;
+        }
         .question {
             font-size: 22px;
             font-weight: bold;
@@ -134,12 +145,33 @@
         }
         #next-btn:hover { background-color: #2980b9; }
         .score-board { font-size: 24px; font-weight: bold; color: #27ae60; display: none; line-height: 2; }
+        
+        /* تأثيرات الأشكال البرمجية */
+        .spinner-wheel {
+            width: 120px; height: 120px; border-radius: 50%;
+            background: conic-gradient(#e74c3c 0 60deg, #f1c40f 60deg 120deg, #2ecc71 120deg 180deg, #3498db 180deg 240deg, #9b59b6 240deg 300deg, #e67e22 300deg 360deg);
+            border: 4px solid #2c3e50; position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .spinner-arrow {
+            position: absolute; top: -10px; left: 50px; width: 0; height: 0;
+            border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 25px solid #2c3e50;
+        }
+        .spinner-center {
+            position: absolute; top: 50px; left: 50px; width: 20px; height: 20px;
+            background: white; border-radius: 50%; border: 3px solid #2c3e50;
+        }
+        .number-label { position: absolute; font-weight: bold; color: white; text-shadow: 1px 1px 2px black; font-size: 18px; }
+        .card-box {
+            display: inline-block; padding: 10px 15px; margin: 5px; font-size: 22px; font-weight: bold;
+            background: white; border: 2px solid #333; border-radius: 6px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
 
     <div class="header-box">
-        <h1>إهداء إلى زملائه الأذكياء 🎁</h1>
+        <h1>إهداء من زميلكم تميم (أبو سعد) إلى زملائه الأذكياء 🎁</h1>
         <h2>تحدي الإحصاء والاحتمالات الشامل - تدريبات للاختبارات المركزية</h2>
     </div>
 
@@ -150,6 +182,8 @@
             
             <div id="rule-box" class="rule-box"></div>
             
+            <div id="visual-box" class="visual-box"></div>
+            
             <div id="question-text" class="question">جارٍ تحميل السؤال...</div>
             <div id="options-container" class="options"></div>
             <div id="explanation-box" class="explanation"></div>
@@ -159,9 +193,24 @@
     </div>
 
     <script>
+        // دالة مساعدة لإنشاء شكل القرص الدوار
+        const spinnerHTML = `
+            <div class="spinner-wheel">
+                <div class="spinner-arrow"></div>
+                <div class="spinner-center"></div>
+                <div class="number-label" style="top: 10px; left: 75px;">1</div>
+                <div class="number-label" style="top: 45px; left: 95px;">2</div>
+                <div class="number-label" style="top: 80px; left: 75px;">3</div>
+                <div class="number-label" style="top: 80px; left: 30px;">4</div>
+                <div class="number-label" style="top: 45px; left: 10px;">5</div>
+                <div class="number-label" style="top: 10px; left: 30px;">6</div>
+            </div>
+        `;
+
         const quizData = [
             {
                 rule: "المتوسط الحسابي = (مجموع البيانات) ÷ (عددها)",
+                visual: `<div style="font-size: 45px;">🧃 🥤 🧃 🥤 🧃</div><div style="width:100%; text-align:center; font-size: 18px; margin-top:10px;">9 ريال | 5 ريال | 5 ريال | 6 ريال | 10 ريال</div>`,
                 question: "أوجد المتوسط الحسابي لأثمان العصائر بالريال: 9، 5، 5، 6، 10",
                 options: ["5", "6", "7", "10"],
                 answer: "7",
@@ -169,41 +218,47 @@
             },
             {
                 rule: "الوسيط = العدد الأوسط في مجموعة البيانات (بعد ترتيبها من الأصغر للأكبر أو العكس)",
-                question: "أوجد الوسيط لأطوال أنهار العالم التالية بالكيلومتر: 6275، 3596، 2850، 6400، 6650",
+                visual: `<div style="font-size: 45px;">🌊 🏞️ 🚤</div><div style="width:100%; text-align:center; font-size: 16px; margin-top:10px;">أطوال الأنهار: 6275، 3596، 2850، 6400، 6650</div>`,
+                question: "أوجد الوسيط لأطوال أنهار العالم التالية بالكيلومتر:",
                 options: ["2850", "3596", "6275", "6400"],
                 answer: "6275",
                 explanation: "1️⃣ نرتب الأطوال تصاعدياً: 2850 ثم 3596 ثم 6275 ثم 6400 ثم 6650.\n2️⃣ الرقم 6275 يقع في المنتصف تماماً، إذن هو الوسيط."
             },
             {
-                rule: "إذا كان عدد البيانات زوجياً: الوسيط = (مجموع العددين الأوسطين) ÷ 2، بعد ترتيب البيانات.",
-                question: "إذا كانت أطوال لاعبي كرة اليد: 160، 165، 148، 150، 158، 155، 170، 165. فما الوسيط لهذه الأطوال؟",
+                rule: "إذا كان عدد البيانات زوجياً: الوسيط = (مجموع العددين الأوسطين) ÷ 2، بعد الترتيب.",
+                visual: `<div style="font-size: 45px;">🤾‍♂️ ⛹️‍♂️ 🏃‍♂️</div><div style="width:100%; text-align:center; font-size: 16px; margin-top:10px;">الأطوال: 160، 165، 148، 150، 158، 155، 170، 165</div>`,
+                question: "إذا كانت أطوال 8 من لاعبي كرة اليد بالأعلى، فما الوسيط لهذه الأطوال؟",
                 options: ["155", "158", "159", "165"],
                 answer: "159",
                 explanation: "1️⃣ نرتبها من الأصغر للأكبر: 148، 150، 155، 158، 160، 165، 165، 170.\n2️⃣ سنجد (رقمين) في المنتصف هما: 158 و 160.\n3️⃣ نجمع ثم نقسم على 2: (158 + 160) = 318. ثم 318 ÷ 2 = 159."
             },
             {
                 rule: "الاحتمال = (عدد النواتج المطلوبة) ÷ (العدد الكلي للنواتج الممكنة)",
-                question: "تم تدوير مؤشر قرص مقسم بالأرقام من 1 إلى 6. ما احتمال وقوف المؤشر على عدد أقل من 6؟",
+                visual: spinnerHTML,
+                question: "تأمل القرص الدوار. ما احتمال وقوف المؤشر على عدد أقل من 6؟",
                 options: ["1/6", "2/6", "5/6", "6/6"],
                 answer: "5/6",
-                explanation: "1️⃣ عدد النواتج الكلي هو 6 (المقام).\n2️⃣ الأرقام الأقل من 6 هي: 1، 2، 3، 4، 5 (عددها 5 أرقام في البسط).\n3️⃣ الاحتمال هو 5/6."
+                explanation: "1️⃣ عدد النواتج الكلي في القرص هو 6 نواتج (المقام).\n2️⃣ الأرقام الأقل من 6 هي: 1، 2، 3، 4، 5 (عددها 5 أرقام في البسط).\n3️⃣ الاحتمال هو 5/6."
             },
             {
                 rule: "الاحتمال المستحيل: هو الحدث الذي لا توجد أي فرصة لوقوعه أبداً (ويساوي صفر).",
-                question: "في تجربة تدوير مؤشر مقسم من 1 إلى 6، صف احتمال وقوف المؤشر على الرقم (9)؟",
+                visual: spinnerHTML,
+                question: "في تجربة تدوير نفس المؤشر السابق، صف احتمال وقوف المؤشر على الرقم (9)؟",
                 options: ["مؤكد", "مستحيل", "متساوي الإمكانية", "قوي"],
                 answer: "مستحيل",
                 explanation: "القرص يحتوي فقط على الأرقام من 1 إلى 6. الرقم 9 غير موجود أساساً في القرص! لذلك هو حدث مستحيل."
             },
             {
                 rule: "الاحتمال = (عدد النواتج المطلوبة) ÷ (العدد الكلي للنواتج الممكنة) (تذكر تبسيط الكسر)",
-                question: "في حقيبة: 3 ورقات (فئة 50)، 6 ورقات (فئة 10)، 18 ورقة (فئة 5). ما احتمال سحب ورقة من فئة 50 ريالاً؟",
+                visual: `<div style="font-size: 40px;">💼 <span style="font-size:25px"> 💵×3 (فئة 50) | 💶×6 (فئة 10) | 💷×18 (فئة 5) </span></div>`,
+                question: "في حقيبة الأوراق النقدية أعلاه. ما احتمال سحب ورقة من فئة 50 ريالاً؟",
                 options: ["1/4", "1/9", "3/4", "3/18"],
                 answer: "1/9",
                 explanation: "1️⃣ نجمع كل الأوراق لمعرفة العدد الكلي (المقام): 3 + 6 + 18 = 27 ورقة.\n2️⃣ أوراق الـ 50 ريال عددها 3 (البسط).\n3️⃣ الاحتمال = 3/27. وبتبسيط الكسر (القسمة على 3) يصبح الناتج 1/9."
             },
             {
                 rule: "لايجاد احتمال حدثين معاً، نضرب (احتمال الحدث الأول) × (احتمال الحدث الثاني).",
+                visual: `<div style="font-size: 55px;">🪙 ✖️ 🎲</div>`,
                 question: "عند رمي قطعة نقدية (شعار أو كتابة) ومكعب أرقام (1 إلى 6). ما احتمال ظهور الكتابة والرقم 3 معاً؟",
                 options: ["1/2", "1/6", "1/8", "1/12"],
                 answer: "1/12",
@@ -211,27 +266,34 @@
             },
             {
                 rule: "الاحتمال = (عدد النواتج المطلوبة) ÷ (العدد الكلي للنواتج الممكنة)",
-                question: "سبع بطاقات كتب على كل منها حرف من حروف كلمة (ر ي ا ض ي ا ت). إذا سحبت بطاقة، فما احتمال سحب الحرف (ي)؟",
+                visual: `
+                    <div class="card-box">ر</div> <div class="card-box">ي</div> <div class="card-box">ا</div> 
+                    <div class="card-box">ض</div> <div class="card-box">ي</div> <div class="card-box">ا</div> <div class="card-box">ت</div>
+                `,
+                question: "تأمل البطاقات السبع بالأعلى. إذا سحبت بطاقة، فما احتمال سحب الحرف (ي)؟",
                 options: ["1/7", "2/7", "3/7", "7/7"],
                 answer: "2/7",
-                explanation: "العدد الكلي للحروف هو 7 (المقام). الحرف (ي) تكرر مرتين في الكلمة (البسط). الاحتمال هو 2/7."
+                explanation: "العدد الكلي للبطاقات هو 7 (المقام). الحرف (ي) تكرر مرتين في الكلمة (البسط). الاحتمال هو 2/7."
             },
             {
                 rule: "مبدأ العد الأساسي = (عدد الخيارات للصنف الأول) × (عدد الخيارات للصنف الثاني)",
-                question: "يتميز القط الحبشي بـ 4 ألوان للعيون، ولونين للفراء. ما عدد الخيارات المختلفة لتكوين قط؟",
+                visual: `<div style="font-size: 45px;">🐈 🐈‍⬛ 😻</div><div style="width:100%; text-align:center; font-size: 16px; margin-top:10px;">العيون: (زرقاء، خضراء، ذهبية، عسلية) | الفراء: (أسود، بني)</div>`,
+                question: "بناءً على الخيارات المذكورة للقط الحبشي بالأعلى. ما عدد الخيارات المختلفة لتكوين قط؟",
                 options: ["6", "8", "10", "12"],
                 answer: "8",
                 explanation: "نضرب عدد خيارات لون العيون (4) في عدد خيارات لون الفراء (2). النتيجة: 4 × 2 = 8 خيارات."
             },
             {
                 rule: "مبدأ العد الأساسي = (عدد الخيارات للصنف الأول) × (عدد الخيارات للصنف الثاني)",
-                question: "يوضح جدول 3 أنواع من الفطائر و 4 أنواع من العصائر. كم وجبة من فطيرة واحدة وعصير واحد يمكن تكوينها؟",
+                visual: `<div style="font-size: 45px;">🥟 🥧 🍹 🧃</div><div style="width:100%; text-align:center; font-size: 16px; margin-top:10px;">فطائر: (سبانخ، جبن، لحم) | عصائر: (موز، رمان، مشكل، برتقال)</div>`,
+                question: "كم وجبة من فطيرة واحدة وعصير واحد يمكن تكوينها؟",
                 options: ["7", "9", "12", "16"],
                 answer: "12",
                 explanation: "نضرب عدد أنواع الفطائر (3) في عدد أنواع العصائر (4). النتيجة: 3 × 4 = 12 وجبة مختلفة."
             },
             {
                 rule: "لكل قطعة نقدية وجهان. لمعرفة النواتج الممكنة لرميها مرتين نضرب: 2 × 2 = 4 نواتج.",
+                visual: `<div style="font-size: 55px;">🪙 ➡️ 🪙</div>`,
                 question: "أرادت هدى وعبير أن تجدا احتمال ظهور (الشعار) مرتين عند إلقاء قطعة نقدية (مرتين). هدى قالت 1/2، وعبير قالت 1/4. أيهما تحليلها صحيح؟",
                 options: ["هدى صحيحة", "عبير صحيحة"],
                 answer: "عبير صحيحة",
@@ -239,7 +301,8 @@
             },
             {
                 rule: "الاحتمال = (عدد النواتج التي تحقق الشرط المطلوب) ÷ (العدد الكلي للنواتج الممكنة)",
-                question: "حصل فواز على المبالغ التالية في 4 أسابيع: 94، 152، 115، 104. بناءً على ذلك، ما احتمال حصوله على مبلغ (أكثر من 100 ريال) الأسبوع القادم؟",
+                visual: `<div style="font-size: 45px;">🗓️ 💰 📈</div><div style="width:100%; text-align:center; font-size: 16px; margin-top:10px;">الأسبوع 1: 94 | الأسبوع 2: 152 | الأسبوع 3: 115 | الأسبوع 4: 104</div>`,
+                question: "بناءً على المبالغ التي حصل عليها فواز. ما احتمال حصوله على مبلغ (أكثر من 100 ريال) الأسبوع القادم؟",
                 options: ["1/4", "1/2", "3/4", "4/4"],
                 answer: "3/4",
                 explanation: "1️⃣ عدد الأسابيع الكلي هو 4 (المقام).\n2️⃣ المبالغ التي أكبر من 100 هي: 152، 115، 104. (عددها 3 في البسط).\n3️⃣ إذن الاحتمال هو 3/4."
@@ -250,6 +313,7 @@
         let score = 0;
 
         const ruleBox = document.getElementById("rule-box");
+        const visualBox = document.getElementById("visual-box");
         const questionText = document.getElementById("question-text");
         const optionsContainer = document.getElementById("options-container");
         const explanationBox = document.getElementById("explanation-box");
@@ -270,9 +334,8 @@
             
             const currentData = quizData[currentQuestionIndex];
             
-            // عرض مربع القاعدة
             ruleBox.innerHTML = `💡 <strong>تذكر القاعدة:</strong> <br> ${currentData.rule}`;
-            
+            visualBox.innerHTML = currentData.visual; // إضافة الرسمة/الشكل الخاص بالسؤال
             questionText.innerText = currentData.question;
             
             currentData.options.forEach(option => {
