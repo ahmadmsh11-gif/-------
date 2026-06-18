@@ -1,380 +1,347 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مراجعة الإنجليزي - Top Goal 2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي الإحصاء والاحتمالات الشامل</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            text-align: center; 
-            padding: 20px; 
-            background: linear-gradient(135deg, #a8edea, #fed6e3); 
-            min-height: 100vh; 
-            color: #333; 
-            margin: 0; 
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
         
-        /* تنسيقات الشاشة الافتتاحية */
-        #intro-screen {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px 30px;
-            border-radius: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            margin: 50px auto;
-            max-width: 650px;
+        body {
+            font-family: 'Tajawal', Tahoma, Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .header-box {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        h1 { margin: 0; font-size: 26px; }
+        h2 { margin: 10px 0 0 0; font-size: 18px; font-weight: normal; opacity: 0.9; }
+        
+        .quiz-container {
+            background-color: white;
+            max-width: 800px;
+            margin: auto;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        .progress-bar {
+            background-color: #e0e0e0;
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #3498db;
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        .question-counter {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .rule-box {
+            background-color: #e3f2fd;
+            border: 2px dashed #64b5f6;
+            color: #1565c0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+        }
+        .question {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            text-align: right;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .option-btn {
+            background-color: #f8f9fa;
+            border: 2px solid #bdc3c7;
+            color: #2c3e50;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            text-align: right;
+            padding-right: 20px;
+        }
+        .option-btn:hover:not(:disabled) {
+            background-color: #eaf2f8;
+            border-color: #3498db;
+        }
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+        .explanation {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #fdfefe;
+            border-right: 6px solid #f1c40f;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            color: #34495e;
+            font-size: 17px;
+            text-align: right;
             line-height: 1.8;
         }
-        
-        /* رسم شعار Top Goal 2 مثل الصورة تماماً */
-        .topgoal-logo {
-            font-size: 3.5em;
-            font-weight: 900;
-            font-family: 'Arial Black', sans-serif;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            direction: ltr;
+        .explanation-title {
+            font-weight: bold;
+            color: #d35400;
+            margin-bottom: 10px;
+            font-size: 19px;
         }
-        .tg-t { color: #2c3e50; }
-        .tg-o1 { color: #2c3e50; }
-        .tg-p { color: #2c3e50; }
-        .tg-g { color: #27ae60; font-size: 1.2em; }
-        .tg-o2 { color: #2980b9; }
-        .tg-a { color: #8e44ad; }
-        .tg-l { color: #e84393; }
-        .tg-2 { 
-            display: inline-block; width: 60px; height: 60px; line-height: 60px; 
-            border: 4px solid #16a085; border-radius: 50%; color: #2c3e50; font-size: 0.7em; margin-left: 10px;
+        #next-btn {
+            display: none;
+            margin-top: 25px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+            font-family: inherit;
         }
-
-        .intro-dedication { color: #d35400; font-weight: bold; font-size: 1.4em; margin-bottom: 20px; }
-        
-        /* تسجيل الدخول */
-        .player-registration { background: #f4f6f7; border: 2px dashed #3498db; padding: 20px; border-radius: 15px; margin: 20px 0; }
-        #player-name { font-size: 1.2em; padding: 10px; width: 80%; border-radius: 10px; border: 2px solid #bdc3c7; text-align: center; font-weight: bold; margin-bottom: 10px; outline: none; }
-        #player-name:focus { border-color: #2980b9; }
-
-        #start-btn { background: #27ae60; color: white; padding: 15px 40px; font-size: 1.5em; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; margin-top: 20px; box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4); transition: 0.3s; }
-        #start-btn:hover { transform: scale(1.05); background: #219150; }
-
-        /* تنسيقات شاشة الاختبار */
-        #quiz-screen { display: none; }
-        .score-board { font-size: 1.8em; font-weight: bold; color: #fff; background: rgba(0,0,0,0.3); padding: 15px 30px; border-radius: 50px; display: inline-block; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .question-box { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin: 0 auto; max-width: 650px; }
-        
-        /* تنسيق السؤال الإنجليزي ليكون من اليسار لليمين وواضح */
-        .english-text { direction: ltr; text-align: left; font-family: 'Arial', sans-serif; font-size: 1.4em; color: #2c3e50; font-weight: bold; margin-bottom: 20px; line-height: 1.5; }
-        .blank-space { border-bottom: 3px solid #e74c3c; display: inline-block; width: 80px; }
-
-        button.option-btn { display: block; margin: 12px auto; padding: 15px; width: 90%; border-radius: 15px; border: 2px solid #ecf0f1; background: #fdfdfd; color: #2980b9; font-size: 1.3em; font-weight: bold; font-family: 'Arial', sans-serif; cursor: pointer; transition: 0.3s; direction: ltr; }
-        button.option-btn:hover:not(:disabled) { background: #eaf2f8; border-color: #3498db; transform: scale(1.02); }
-        button.option-btn:disabled { cursor: not-allowed; opacity: 0.8; }
-        
-        /* التغذية الراجعة والشرح بالعربي */
-        #feedback { font-size: 1.1em; line-height: 1.8; padding: 20px; margin-top: 20px; border-radius: 15px; display: none; text-align: right; direction: rtl; }
-        .exp-details { background: rgba(255,255,255,0.6); padding: 10px 15px; border-radius: 10px; margin-top: 10px; border-right: 4px solid; }
-        
-        /* تنسيق أزرار التنقل */
-        .nav-buttons { display: flex; justify-content: space-between; margin-top: 25px; gap: 10px; direction: rtl; }
-        .nav-btn { font-size: 1.1em; font-weight: bold; padding: 15px; border-radius: 15px; border: none; cursor: pointer; transition: 0.3s; flex: 1; color: white; }
-        #prev-btn { background-color: #95a5a6; }
-        #next-btn { background-color: #34495e; }
-
-        /* سجل الأبطال لـ 25 مركز */
-        #leaderboard-screen { display: none; }
-        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 1.1em; direction: rtl; }
-        .leaderboard-table th, .leaderboard-table td { padding: 12px; border-bottom: 2px solid #eee; text-align: center; }
-        .leaderboard-table th { background-color: #2980b9; color: white; }
-        .leaderboard-table tr:nth-child(2) td { font-weight: bold; font-size: 1.2em; background-color: #fff9c4; color: #d35400; } 
-        .current-player { border: 3px solid #27ae60 !important; background-color: #e9f7ef !important; }
-
-        /* تنسيق العداد */
-        .visitor-counter-box { margin-top: 25px; border-top: 1px solid #ddd; padding-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; font-weight: bold; color: #7f8c8d; direction: rtl;}
+        #next-btn:hover { background-color: #2980b9; }
+        .score-board { font-size: 24px; font-weight: bold; color: #27ae60; display: none; line-height: 2; }
     </style>
 </head>
 <body>
 
-    <!-- الشاشة الافتتاحية -->
-    <div id="intro-screen">
-        <!-- الشعار المبرمج -->
-        <div class="topgoal-logo">
-            <span class="tg-t">T</span><span class="tg-o1">o</span><span class="tg-p">p</span><span class="tg-g">G</span><span class="tg-o2">o</span><span class="tg-a">a</span><span class="tg-l">l</span>
-            <div class="tg-2">2</div>
-        </div>
-        
-        <p class="intro-dedication">✨ مراجعة الوحدة الخامسة (Unit 5) الشاملة ✨</p>
-
-        <div class="player-registration" id="reg-box">
-            <h3 style="color: #2980b9; margin-top: 0;">أدخل اسمك باللغة الإنجليزية أو العربية للبدء:</h3>
-            <input type="text" id="player-name" placeholder="Type your name here..." required>
-        </div>
-
-        <button id="start-btn" onclick="startQuiz()">Start Quiz 🚀</button>
-
-        <div class="visitor-counter-box">
-            <span>📊 إجمالي الزيارات المسجلة:</span>
-            <img src="https://api.visitorbadge.io/api/visitors?path=topgoal2-rev-unit5&label=VISITORS&countColor=%2327ae60" alt="عداد الزوار"/>
-        </div>
+    <div class="header-box">
+        <h1>إهداء إلى زملائه الأذكياء 🎁</h1>
+        <h2>تحدي الإحصاء والاحتمالات الشامل - تدريبات للاختبارات المركزية</h2>
     </div>
 
-    <!-- شاشة الاختبار -->
-    <div id="quiz-screen">
-        <div class="score-board">Score: <span id="points" style="color: #f1c40f;">0</span></div>
-
-        <div class="question-box">
-            <!-- السؤال سيتم إدراجه هنا بتنسيق LTR -->
-            <div id="question-text" class="english-text"></div>
+    <div class="quiz-container">
+        <div id="quiz-content">
+            <div class="progress-bar"><div id="progress" class="progress-fill"></div></div>
+            <div id="counter" class="question-counter"></div>
             
-            <div id="options-container"></div>
-            <div id="feedback"></div>
+            <div id="rule-box" class="rule-box"></div>
             
-            <div class="nav-buttons">
-                <button id="prev-btn" class="nav-btn" onclick="prevQuestion()">⬅ السابق</button>
-                <button id="next-btn" class="nav-btn" onclick="nextQuestion()">التالي ➡</button>
-            </div>
+            <div id="question-text" class="question">جارٍ تحميل السؤال...</div>
+            <div id="options-container" class="options"></div>
+            <div id="explanation-box" class="explanation"></div>
+            <button id="next-btn" onclick="nextQuestion()">السؤال التالي ⬅️</button>
         </div>
+        <div id="score-content" class="score-board"></div>
     </div>
 
-    <!-- شاشة سجل الأبطال -->
-    <div id="leaderboard-screen">
-        <div class="question-box" style="margin-top:20px; max-width:700px;">
-            <h1 style="color:#2c3e50; font-size:2.5em;">🎉 Amazing Job! 🎉</h1>
-            <h2 style="color:#27ae60; font-size:2em;">Your Score: <span id="final-score-display"></span></h2>
+    <script>
+        const quizData = [
+            {
+                rule: "المتوسط الحسابي = (مجموع البيانات) ÷ (عددها)",
+                question: "أوجد المتوسط الحسابي لأثمان العصائر بالريال: 9، 5، 5، 6، 10",
+                options: ["5", "6", "7", "10"],
+                answer: "7",
+                explanation: "1️⃣ نجمع جميع الأرقام مع بعضها: 9 + 5 + 5 + 6 + 10 = 35.\n2️⃣ نقسم المجموع على عدد هذه الأرقام (5): 35 ÷ 5 = 7."
+            },
+            {
+                rule: "الوسيط = العدد الأوسط في مجموعة البيانات (بعد ترتيبها من الأصغر للأكبر أو العكس)",
+                question: "أوجد الوسيط لأطوال أنهار العالم التالية بالكيلومتر: 6275، 3596، 2850، 6400، 6650",
+                options: ["2850", "3596", "6275", "6400"],
+                answer: "6275",
+                explanation: "1️⃣ نرتب الأطوال تصاعدياً: 2850 ثم 3596 ثم 6275 ثم 6400 ثم 6650.\n2️⃣ الرقم 6275 يقع في المنتصف تماماً، إذن هو الوسيط."
+            },
+            {
+                rule: "إذا كان عدد البيانات زوجياً: الوسيط = (مجموع العددين الأوسطين) ÷ 2، بعد ترتيب البيانات.",
+                question: "إذا كانت أطوال لاعبي كرة اليد: 160، 165، 148، 150، 158، 155، 170، 165. فما الوسيط لهذه الأطوال؟",
+                options: ["155", "158", "159", "165"],
+                answer: "159",
+                explanation: "1️⃣ نرتبها من الأصغر للأكبر: 148، 150، 155، 158، 160، 165، 165، 170.\n2️⃣ سنجد (رقمين) في المنتصف هما: 158 و 160.\n3️⃣ نجمع ثم نقسم على 2: (158 + 160) = 318. ثم 318 ÷ 2 = 159."
+            },
+            {
+                rule: "الاحتمال = (عدد النواتج المطلوبة) ÷ (العدد الكلي للنواتج الممكنة)",
+                question: "تم تدوير مؤشر قرص مقسم بالأرقام من 1 إلى 6. ما احتمال وقوف المؤشر على عدد أقل من 6؟",
+                options: ["1/6", "2/6", "5/6", "6/6"],
+                answer: "5/6",
+                explanation: "1️⃣ عدد النواتج الكلي هو 6 (المقام).\n2️⃣ الأرقام الأقل من 6 هي: 1، 2، 3، 4، 5 (عددها 5 أرقام في البسط).\n3️⃣ الاحتمال هو 5/6."
+            },
+            {
+                rule: "الاحتمال المستحيل: هو الحدث الذي لا توجد أي فرصة لوقوعه أبداً (ويساوي صفر).",
+                question: "في تجربة تدوير مؤشر مقسم من 1 إلى 6، صف احتمال وقوف المؤشر على الرقم (9)؟",
+                options: ["مؤكد", "مستحيل", "متساوي الإمكانية", "قوي"],
+                answer: "مستحيل",
+                explanation: "القرص يحتوي فقط على الأرقام من 1 إلى 6. الرقم 9 غير موجود أساساً في القرص! لذلك هو حدث مستحيل."
+            },
+            {
+                rule: "الاحتمال = (عدد النواتج المطلوبة) ÷ (العدد الكلي للنواتج الممكنة) (تذكر تبسيط الكسر)",
+                question: "في حقيبة: 3 ورقات (فئة 50)، 6 ورقات (فئة 10)، 18 ورقة (فئة 5). ما احتمال سحب ورقة من فئة 50 ريالاً؟",
+                options: ["1/4", "1/9", "3/4", "3/18"],
+                answer: "1/9",
+                explanation: "1️⃣ نجمع كل الأوراق لمعرفة العدد الكلي (المقام): 3 + 6 + 18 = 27 ورقة.\n2️⃣ أوراق الـ 50 ريال عددها 3 (البسط).\n3️⃣ الاحتمال = 3/27. وبتبسيط الكسر (القسمة على 3) يصبح الناتج 1/9."
+            },
+            {
+                rule: "لايجاد احتمال حدثين معاً، نضرب (احتمال الحدث الأول) × (احتمال الحدث الثاني).",
+                question: "عند رمي قطعة نقدية (شعار أو كتابة) ومكعب أرقام (1 إلى 6). ما احتمال ظهور الكتابة والرقم 3 معاً؟",
+                options: ["1/2", "1/6", "1/8", "1/12"],
+                answer: "1/12",
+                explanation: "1️⃣ احتمال ظهور الكتابة = 1/2.\n2️⃣ احتمال ظهور الرقم 3 = 1/6.\n3️⃣ نضرب الاحتمالين: 1/2 × 1/6 = 1/12."
+            },
+            {
+                rule: "الاحتمال = (عدد النواتج المطلوبة) ÷ (العدد الكلي للنواتج الممكنة)",
+                question: "سبع بطاقات كتب على كل منها حرف من حروف كلمة (ر ي ا ض ي ا ت). إذا سحبت بطاقة، فما احتمال سحب الحرف (ي)؟",
+                options: ["1/7", "2/7", "3/7", "7/7"],
+                answer: "2/7",
+                explanation: "العدد الكلي للحروف هو 7 (المقام). الحرف (ي) تكرر مرتين في الكلمة (البسط). الاحتمال هو 2/7."
+            },
+            {
+                rule: "مبدأ العد الأساسي = (عدد الخيارات للصنف الأول) × (عدد الخيارات للصنف الثاني)",
+                question: "يتميز القط الحبشي بـ 4 ألوان للعيون، ولونين للفراء. ما عدد الخيارات المختلفة لتكوين قط؟",
+                options: ["6", "8", "10", "12"],
+                answer: "8",
+                explanation: "نضرب عدد خيارات لون العيون (4) في عدد خيارات لون الفراء (2). النتيجة: 4 × 2 = 8 خيارات."
+            },
+            {
+                rule: "مبدأ العد الأساسي = (عدد الخيارات للصنف الأول) × (عدد الخيارات للصنف الثاني)",
+                question: "يوضح جدول 3 أنواع من الفطائر و 4 أنواع من العصائر. كم وجبة من فطيرة واحدة وعصير واحد يمكن تكوينها؟",
+                options: ["7", "9", "12", "16"],
+                answer: "12",
+                explanation: "نضرب عدد أنواع الفطائر (3) في عدد أنواع العصائر (4). النتيجة: 3 × 4 = 12 وجبة مختلفة."
+            },
+            {
+                rule: "لكل قطعة نقدية وجهان. لمعرفة النواتج الممكنة لرميها مرتين نضرب: 2 × 2 = 4 نواتج.",
+                question: "أرادت هدى وعبير أن تجدا احتمال ظهور (الشعار) مرتين عند إلقاء قطعة نقدية (مرتين). هدى قالت 1/2، وعبير قالت 1/4. أيهما تحليلها صحيح؟",
+                options: ["هدى صحيحة", "عبير صحيحة"],
+                answer: "عبير صحيحة",
+                explanation: "رمي القطعة مرتين ينتج عنه 4 نتائج: (شعار، شعار)، (شعار، كتابة)، (كتابة، شعار)، (كتابة، كتابة).\nظهور الشعار مرتين هو نتيجة (واحدة) من أصل (4)، إذن الاحتمال الصحيح هو 1/4."
+            },
+            {
+                rule: "الاحتمال = (عدد النواتج التي تحقق الشرط المطلوب) ÷ (العدد الكلي للنواتج الممكنة)",
+                question: "حصل فواز على المبالغ التالية في 4 أسابيع: 94، 152، 115، 104. بناءً على ذلك، ما احتمال حصوله على مبلغ (أكثر من 100 ريال) الأسبوع القادم؟",
+                options: ["1/4", "1/2", "3/4", "4/4"],
+                answer: "3/4",
+                explanation: "1️⃣ عدد الأسابيع الكلي هو 4 (المقام).\n2️⃣ المبالغ التي أكبر من 100 هي: 152، 115، 104. (عددها 3 في البسط).\n3️⃣ إذن الاحتمال هو 3/4."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const ruleBox = document.getElementById("rule-box");
+        const questionText = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("options-container");
+        const explanationBox = document.getElementById("explanation-box");
+        const nextBtn = document.getElementById("next-btn");
+        const progressFill = document.getElementById("progress");
+        const counterText = document.getElementById("counter");
+        const quizContent = document.getElementById("quiz-content");
+        const scoreContent = document.getElementById("score-content");
+
+        function loadQuestion() {
+            explanationBox.style.display = "none";
+            nextBtn.style.display = "none";
+            optionsContainer.innerHTML = "";
             
-            <h2 style="margin-top: 30px; color: #2980b9;">👑 Leaderboard - لوحة الأبطال 👑</h2>
-            <div style="overflow-x:auto;">
-                <table class="leaderboard-table" id="leaderboard-table">
-                    <thead>
-                        <tr>
-                            <th>المركز</th>
-                            <th>البطل</th>
-                            <th>النقاط</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboard-body"></tbody>
-                </table>
-            </div>
+            let progressPercentage = (currentQuestionIndex / quizData.length) * 100;
+            progressFill.style.width = `${progressPercentage}%`;
+            counterText.innerText = `السؤال ${currentQuestionIndex + 1} من ${quizData.length}`;
+            
+            const currentData = quizData[currentQuestionIndex];
+            
+            // عرض مربع القاعدة
+            ruleBox.innerHTML = `💡 <strong>تذكر القاعدة:</strong> <br> ${currentData.rule}`;
+            
+            questionText.innerText = currentData.question;
+            
+            currentData.options.forEach(option => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.className = "option-btn";
+                button.onclick = () => checkAnswer(button, option, currentData.answer, currentData.explanation);
+                optionsContainer.appendChild(button);
+            });
+        }
 
-            <button onclick="location.reload()" style="background:#3498db; color:white; padding:15px; border-radius:15px; border:none; font-size:1.2em; font-weight:bold; cursor:pointer; width:80%; margin-top:30px;">إعادة التحدي 🔄</button>
-        </div>
-    </div>
+        function checkAnswer(button, selected, correct, explanation) {
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(btn => btn.disabled = true); 
 
-<script>
-// الأسئلة مع الشرح العربي المفصل
-const questions = [
-    {
-        "q_num": 1,
-        "question": "My brother Mustafa loves 3D <span class='blank-space'></span>. He enjoys movies made by computers.",
-        "options": ["animation", "mystery", "sci-fi", "musical"],
-        "answer": "animation",
-        "exp": "الجملة تقول إن مصطفى يحب الأفلام (المصنوعة بالكمبيوتر - made by computers)، وهذا هو بالضبط تعريف <b>الرسوم المتحركة (animation)</b>. الخيارات الأخرى لا تناسب هذا الوصف."
-    },
-    {
-        "q_num": 2,
-        "question": "The movie was a <span class='blank-space'></span>. We didn't know what was happening until the end.",
-        "options": ["plot", "mystery", "play", "comedy"],
-        "answer": "mystery",
-        "exp": "الكلمة المفتاحية هي (لم نكن نعرف ما يحدث حتى النهاية)، وهذا هو أسلوب أفلام <b>الغموض (mystery)</b>."
-    },
-    {
-        "q_num": 3,
-        "question": "Space and planets are Omar's favorite topic. That's why he chose a <span class='blank-space'></span> movie.",
-        "options": ["sci-fi", "musical", "play", "horror"],
-        "answer": "sci-fi",
-        "exp": "الكلمات المفتاحية هنا هي (Space) الفضاء، و (planets) الكواكب. هذه المواضيع ترتبط دائماً بأفلام <b>الخيال العلمي (sci-fi)</b>."
-    },
-    {
-        "q_num": 4,
-        "question": "Aisha didn't like the <span class='blank-space'></span> we were watching. She said the singing was bad.",
-        "options": ["sci-fi", "horror", "musical", "documentary"],
-        "answer": "musical",
-        "exp": "بما أن عائشة اشتكت من أن (الغناء كان سيئاً - the singing was bad)، فهذا يدل بوضوح على أن الفيلم كان فيلماً <b>موسيقياً (musical)</b>."
-    },
-    {
-        "q_num": 5,
-        "question": "The best thing about this story is the <span class='blank-space'></span>. They are all different and interesting.",
-        "options": ["characters", "storyboard", "horror", "act"],
-        "answer": "characters",
-        "exp": "القصص تتكون من (شخصيات). الجملة تقول إنهم مختلفون ومثيرون للاهتمام، لذا الكلمة الصحيحة هي <b>الشخصيات (characters)</b>."
-    },
-    {
-        "q_num": 6,
-        "question": "Amina <span class='blank-space'></span> (eat) a sandwich in class yesterday.",
-        "options": ["were eating", "was eating", "is eating", "ate"],
-        "answer": "was eating",
-        "exp": "سؤال قواعد عن (الماضي المستمر). الفاعل (Amina) مفرد، لذلك نستخدم <b>was</b>. ثم نضيف للفعل eat الحروف <b>ing</b> ليصبح <b>was eating</b> لأنه حدث كان مستمراً."
-    },
-    {
-        "q_num": 7,
-        "question": "We <span class='blank-space'></span> (laugh) because the horror movie was funny.",
-        "options": ["were laughing", "was laughing", "are laughing", "laughed"],
-        "answer": "were laughing",
-        "exp": "الضمير (We) يعني نحن وهو للجمع، لذلك يأخذ <b>were</b>. ونضيف للفعل laugh الحروف <b>ing</b> لتصبح الإجابة الصحيحة <b>were laughing</b>."
-    },
-    {
-        "q_num": 8,
-        "question": "<span class='blank-space'></span> Adel and Ibrahim (make) a documentary last week?",
-        "options": ["Was / making", "Were / making", "Are / making", "Did / make"],
-        "answer": "Were / making",
-        "exp": "سؤال في الماضي المستمر. الفاعل (عادل وإبراهيم) جمع، لذا نبدأ السؤال بـ <b>Were</b>. والفعل make نحذف منه الـ e ونضيف <b>ing</b> ليصبح <b>making</b>."
-    },
-    {
-        "q_num": 9,
-        "question": "Match: Why don't <span class='blank-space'></span>?",
-        "options": ["you show me your ideas?", "a storyboard to help us?", "about starting the story with a song?", "we draw the characters on this page?"],
-        "answer": "we draw the characters on this page?",
-        "exp": "قاعدة تقديم الاقتراحات: عبارة (Why don't) تتبعها دائماً كلمة (we) ثم فعل مجرد بدون إضافات. لذلك الخيار <b>Why don't we draw...</b> هو التركيب الصحيح."
-    },
-    {
-        "q_num": 10,
-        "question": "Match: How about <span class='blank-space'></span>?",
-        "options": ["we draw the characters?", "using a storyboard to help us?", "show me your ideas?", "you show me your ideas?"],
-        "answer": "using a storyboard to help us?",
-        "exp": "قاعدة مهمة جداً: بعد عبارة (How about) أو (What about) يجب أن يأتي الفعل مضافاً له <b>ing</b>. الخيار الوحيد الذي يبدأ بفعل فيه ing هو <b>using</b>."
-    }
-];
+            if (selected === correct) {
+                button.style.backgroundColor = "#2ecc71";
+                button.style.borderColor = "#27ae60";
+                button.style.color = "white";
+                button.innerHTML += " ✅ (إجابة صحيحة)";
+                score++;
+            } else {
+                button.style.backgroundColor = "#e74c3c";
+                button.style.borderColor = "#c0392b";
+                button.style.color = "white";
+                button.innerHTML += " ❌ (إجابة خاطئة)";
+                
+                buttons.forEach(btn => {
+                    if (btn.innerText.includes(correct)) {
+                        btn.style.backgroundColor = "#2ecc71";
+                        btn.style.color = "white";
+                        btn.style.borderColor = "#27ae60";
+                        btn.innerHTML += " 👈 (هذا هو الحل الصحيح)";
+                    }
+                });
+            }
 
-let currentIdx = 0;
-let userAnswers = {}; 
-let currentPlayer = "";
-let defaultLeaderboard = [
-    { name: "Super Student", score: 100 },
-    { name: "Top Goal Hero", score: 80 }
-];
+            explanationBox.innerHTML = `<div class='explanation-title'>💡 الشرح بالتفصيل:</div>${explanation.replace(/\n/g, '<br>')}`;
+            explanationBox.style.display = "block";
+            nextBtn.style.display = "block";
+        }
 
-function startQuiz() {
-    let inputName = document.getElementById('player-name').value.trim();
-    if(inputName === "") { alert("Please enter your name! رجاءً أدخل اسمك"); return; }
-    currentPlayer = inputName;
-    document.getElementById('intro-screen').style.display = 'none';
-    document.getElementById('quiz-screen').style.display = 'block';
-    loadQ();
-}
-
-function updateScore() {
-    let score = Object.values(userAnswers).filter(a => a.isCorrect).length * 10;
-    document.getElementById('points').innerText = score;
-    return score;
-}
-
-function showFeedbackUI(o, q, isCorrect) {
-    let f = document.getElementById('feedback'); 
-    f.style.display = "block";
-    f.style.borderRight = isCorrect ? "8px solid #27ae60" : "8px solid #e74c3c";
-    f.style.borderLeft = "none";
-
-    if(isCorrect) { 
-        f.style.backgroundColor = "#e8f8f5"; 
-        f.style.color = "#155724"; 
-        f.innerHTML = "✅ <b>إجابة صحيحة الممتاز!</b><div class='exp-details' style='border-color:#27ae60;'>💡 <b>كيف حليناها؟</b><br>" + q.exp + "</div>"; 
-    } else { 
-        f.style.backgroundColor = "#fdedec"; 
-        f.style.color = "#721c24"; 
-        f.innerHTML = "❌ <b>إجابة خاطئة.</b><br>🎯 <b>الإجابة الصحيحة هي:</b> <span dir='ltr' style='font-weight:bold; color:#c0392b;'>" + q.answer + "</span><div class='exp-details' style='border-color:#c0392b;'>💡 <b>ليه اخترنا هذه الإجابة؟</b><br>" + q.exp + "</div>"; 
-    }
-}
-
-function loadQ() {
-    let q = questions[currentIdx];
-    // إدراج السؤال بالإنجليزي
-    document.getElementById('question-text').innerHTML = "Q" + (currentIdx + 1) + ": " + q.question;
-    
-    let cont = document.getElementById('options-container'); 
-    cont.innerHTML = '';
-    document.getElementById('feedback').style.display = "none";
-    
-    document.getElementById('prev-btn').disabled = (currentIdx === 0);
-    let nextBtn = document.getElementById('next-btn');
-    if (currentIdx === questions.length - 1) {
-        nextBtn.innerHTML = "Finish 🏁";
-        nextBtn.style.backgroundColor = "#e74c3c";
-    } else {
-        nextBtn.innerHTML = "Next ➡";
-        nextBtn.style.backgroundColor = "#2980b9";
-    }
-
-    q.options.forEach(o => {
-        let btn = document.createElement('button'); 
-        btn.className = "option-btn";
-        btn.innerHTML = o;
-        
-        if (userAnswers[currentIdx]) {
-            btn.disabled = true;
-            if (o === userAnswers[currentIdx].selected) {
-                btn.style.border = userAnswers[currentIdx].isCorrect ? "3px solid #27ae60" : "3px solid #e74c3c";
-                btn.style.backgroundColor = userAnswers[currentIdx].isCorrect ? "#e9f7ef" : "#fdedec";
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showScore();
             }
         }
 
-        btn.onclick = () => {
-            let allBtns = cont.querySelectorAll('.option-btn');
-            allBtns.forEach(b => b.disabled = true);
-
-            let isCorrect = (o === q.answer);
-            userAnswers[currentIdx] = { selected: o, isCorrect: isCorrect };
+        function showScore() {
+            quizContent.style.display = "none";
+            scoreContent.style.display = "block";
+            progressFill.style.width = "100%";
             
-            updateScore();
-            showFeedbackUI(o, q, isCorrect);
-        };
-        cont.appendChild(btn);
-    });
+            let message = "";
+            if(score === quizData.length) message = "أنت بطل وعبقري في الإحصاء والاحتمالات! 🏆";
+            else if(score >= quizData.length / 2) message = "عمل رائع ومجهود بطل، استمر في التدريب! 👏";
+            else message = "لا بأس، مع قراءة الشرح ومراجعة الأخطاء ستكون درجاتك أفضل في المرة القادمة 💪";
 
-    if (userAnswers[currentIdx]) {
-        showFeedbackUI(userAnswers[currentIdx].selected, q, userAnswers[currentIdx].isCorrect);
-    }
-}
+            scoreContent.innerHTML = `
+                🎉 انتهى الاختبار! <br><br> 
+                نتيجتك النهائية هي: <span style="font-size:36px; color:#e67e22;">${score}</span> من ${quizData.length} <br><br>
+                ${message}
+            `;
+        }
 
-function prevQuestion() {
-    if (currentIdx > 0) { currentIdx--; loadQ(); }
-}
-
-function nextQuestion() {
-    if(currentIdx < questions.length - 1) {
-        currentIdx++; loadQ();
-    } else { 
-        finishQuiz();
-    }
-}
-
-function finishQuiz() {
-    document.getElementById('quiz-screen').style.display = 'none';
-    document.getElementById('leaderboard-screen').style.display = 'block';
-    
-    let finalScore = updateScore();
-    document.getElementById('final-score-display').innerText = finalScore + " / " + (questions.length * 10);
-
-    let savedLeaderboard = JSON.parse(localStorage.getItem('engLeaderboard'));
-    if (!savedLeaderboard) { savedLeaderboard = [...defaultLeaderboard]; }
-
-    let existingPlayer = savedLeaderboard.find(p => p.name === currentPlayer);
-    if (existingPlayer) {
-        if (finalScore > existingPlayer.score) { existingPlayer.score = finalScore; }
-    } else {
-        savedLeaderboard.push({ name: currentPlayer, score: finalScore });
-    }
-
-    savedLeaderboard.sort((a, b) => b.score - a.score);
-    savedLeaderboard = savedLeaderboard.slice(0, 25);
-    localStorage.setItem('engLeaderboard', JSON.stringify(savedLeaderboard));
-
-    let tbody = document.getElementById('leaderboard-body');
-    tbody.innerHTML = '';
-    
-    savedLeaderboard.forEach((player, index) => {
-        let tr = document.createElement('tr');
-        if (player.name === currentPlayer) tr.className = "current-player";
-        let rankBadge = (index + 1);
-        if (index === 0) rankBadge = "🥇 الأول";
-        else if (index === 1) rankBadge = "🥈 الثاني";
-        else if (index === 2) rankBadge = "🥉 الثالث";
-
-        tr.innerHTML = `<td>${rankBadge}</td><td style="direction:ltr;">${player.name}</td><td>${player.score}</td>`;
-        tbody.appendChild(tr);
-    });
-}
-</script>
+        loadQuestion();
+    </script>
 </body>
 </html>
